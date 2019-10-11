@@ -27,3 +27,7 @@
 .settings-area {
   padding: 30px;
 }
+
+.hero.is-primary.is-bold {
+    background-image: linear-gradient(90deg,#7cad3c 0,#458d90 51%,#047779 100%);
+}

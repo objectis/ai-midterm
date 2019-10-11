@@ -7,9 +7,17 @@ from flask import Flask, redirect, url_for, render_template, request, session
 import json
 import sys
 import os
+import stripe
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)  # Generic key for dev purposes only
+
+stripe_keys = {
+  'secret_key': os.environ['STRIPE_SECRET_KEY'],
+  'publishable_key': os.environ['STRIPE_PUBLISHABLE_KEY']
+}
+
+
 
 # Heroku
 #from flask_heroku import Heroku
@@ -33,6 +41,8 @@ def login():
             return json.dumps({'status': 'Both fields required'})
         return render_template('login.html', form=form)
     user = helpers.get_user()
+    user.active = user.payment == 'paid' #helpers.payment_token()
+    user.key = stripe_keys['publishable_key']
     return render_template('home.html', user=user)
 
 
@@ -62,6 +72,30 @@ def signup():
         return render_template('login.html', form=form)
     return redirect(url_for('login'))
 
+
+# -------- Charge ---------------------------------------------------------- #
+@app.route('/charge', methods=['POST'])
+def charge():
+    if session.get('logged_in'):
+        stripe.api_key = stripe_keys['secret_key']
+        user = helpers.get_user()
+        try:
+            amount = 500  # amount in cents
+            customer = stripe.Customer.create(
+                email=user.email,
+                source=request.form['stripeToken']
+            )
+            stripe.Charge.create(
+                customer=customer.id,
+                amount=amount,
+                currency='usd',
+                description='Charge'
+            )
+            helpers.change_user(payment=helpers.payment_token())
+            user.active = True
+            return render_template('home.html', user=user)
+        except stripe.error.StripeError as e:
+            return render_template('error.html',error = e)
 
 # -------- Settings ---------------------------------------------------------- #
 @app.route('/settings', methods=['GET', 'POST'])

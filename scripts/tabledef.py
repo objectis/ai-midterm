@@ -30,6 +30,7 @@ class User(Base):
     username = Column(String(30), unique=True)
     password = Column(String(512))
     email = Column(String(50))
+    payment = Column(String(6))
 
     def __repr__(self):
         return '<User %r>' % self.username

@@ -18,12 +18,14 @@
     </div>
     <div>
       {% if user.active %}
-      <form id="upload-file" method="post" enctype="multipart/form-data">
-        <label for="imageUpload" class="upload-label">
-          Choose...
-        </label>
-        <input type="file" name="file" id="imageUpload" accept=".csv">
-      </form>
+      <center>
+      <div id="console"></div>
+      <!-- Add an image that we will use to test -->
+      <video autoplay playsinline muted id="webcam" width="300" height="300"></video>
+      <div style="color:darkgreen;font-size:80px; margin-top:20px" id="forsure"></div>
+      <!-- Load index.js after the content of the page -->
+      <script src="../static/js/webcam.js"></script>
+      </center>
       {% endif %}
       {% if not user.active %}
       <div><span>Activate subscription with payment</span></div>

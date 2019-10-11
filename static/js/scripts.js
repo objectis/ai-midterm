@@ -69,3 +69,4 @@ $("#navbar-burger-id").click(function () {
     $("#navbar-menu-id").addClass("is-active");
   }
 });
+

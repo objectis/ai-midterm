@@ -2,48 +2,42 @@
 {% block body %}
 {% include "navbar.html" %}
 <section class="hero is-primary is-bold is-large">
-  <div class="hero-body">
-    <div class="paymewrap">
-      <h3>Monthly service for $5.00</h3>
+  <div class="hero-body-narrow">
+
+
       {% if not user.active %}
-      <form action="/charge" method="post">
-        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ user.key }}"
-          data-description="Test data" data-amount="500" data-locale="auto">
-          </script>
-      </form>
-      {% endif %}
-      {% if user.active %}
-      <div>Subscription activated</div>
-      {% endif %}
-    </div>
-    <div>
-      {% if user.active %}
-      <center>
-      <div id="console"></div>
-      <!-- Add an image that we will use to test -->
-      <video autoplay playsinline muted id="webcam" width="300" height="300"></video>
-      <div style="color:darkgreen;font-size:80px; margin-top:20px" id="forsure"></div>
-      <!-- Load index.js after the content of the page -->
-      <script src="../static/js/webcam.js"></script>
-      </center>
-      {% endif %}
-      {% if not user.active %}
-      <div><span>Activate subscription with payment</span></div>
-      {% endif %}
-      <div class="image-section" style="display:none;">
-        <div>
-          <button type="button" class="upload-label" id="btn-predict">Optimize Discount</button>
-        </div>
+      <div class="paymewrap">
+        <h3>Activate service for just 5$ per month</h3>
+        <form action="/charge" method="post">
+          <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ user.key }}"
+            data-description="Test data" data-amount="500" data-locale="auto">
+            </script>
+        </form>
       </div>
+      {% endif %}
+      {% if user.active %}
+      <div class="substatus">Subscription activated</div>
+      <div class="camerawrap">
+        <div class="preloader">
+          <div class="preloader_desc">Loading object detector</div>
+          <div class="loader">
+          </div>
+        </div>
+        <div class="caminfo" style="display: none;">
+          <div id="console">
+            <div id="object"></div>
+            <div id="probability"></div>
+          </div>
+          <video autoplay playsinline muted id="webcam" width="400" height="400"></video>
+        </div>
+
+        <script src="https://unpkg.com/@tensorflow/tfjs"></script>
+        <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
+        <script src="../static/js/webcam.js"></script>
+
+      </div>
+      {% endif %}
     </div>
-    <div class="loader" style="display:none;"></div>
-    <h1 id="result">
-      <span> </span>
-    </h1>
-    <div style="padding-top: 40px">
-      <span>format example:</span>
-    </div>
-    <img src="../static/img/example.jpg" alt="">
   </div>
 </section>
 {% endblock %}

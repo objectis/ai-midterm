@@ -41,7 +41,7 @@ def login():
             return json.dumps({'status': 'Both fields required'})
         return render_template('login.html', form=form)
     user = helpers.get_user()
-    user.active = user.payment == 'paid' #helpers.payment_token()
+    user.active = user.payment == helpers.payment_token()
     user.key = stripe_keys['publishable_key']
     return render_template('home.html', user=user)
 

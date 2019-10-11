@@ -69,4 +69,4 @@ def username_taken(username):
         return s.query(tabledef.User).filter(tabledef.User.username.in_([username])).first()
 
 def payment_token():
-    return str(datetime.date.today().year) + str(datetime.date.today().month) + str(datetime.date.today().day)
+    return str(datetime.date.today().year) + str(datetime.date.today().month)

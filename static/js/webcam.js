@@ -29,24 +29,38 @@ async function app() {
   console.log('Sucessfully loaded model');
 
   await setupWebcam();
+  $('.preloader').hide();
+  $('.caminfo').show();
   while (true) {
     const result = await net.classify(webcamElement);
 
-    document.getElementById('console').innerText = `
-      prediction: ${result[0].className}\n
-      probability: ${result[0].probability}
-    `;
-    if(result[0].probability > 0.6){
-      document.getElementById('forsure').innerText = result[0].className;
+
+    if(result[0].probability > 0.3){
+      document.getElementById('probability').innerText = `( ${Math.round(result[0].probability * 100)+' % )'}`;
+      document.getElementById('object').innerText = `${result[0].className}`;
+      $('#console').addClass('detected');
+      if(result[0].probability > 0.6){
+        $('#console').addClass('green');
+      }
+      else
+      {
+        $('#console').removeClass('green');
+      }
     }
     else{
-      document.getElementById('forsure').innerText = '';
+      document.getElementById('probability').innerText = '';
+      document.getElementById('object').innerText = 'no object detected';
+      $('#console').removeClass('detected green');
     }
 
-    // Give some breathing room by waiting for the next animation frame to
-    // fire.
+
+    await sleep(500)
     await tf.nextFrame();
   }
+}
+
+function sleep(ms) {
+ return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 app();
